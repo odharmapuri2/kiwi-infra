@@ -1,7 +1,7 @@
-module "vote_service_sg" {
+module "primesg" {
   source = "terraform-aws-modules/security-group/aws"
 
-  name        = "user-service"
+  name        = "prime_sg"
   description = "Security group for user-service with custom ports open within VPC, and PostgreSQL publicly open"
   vpc_id      = "vpc-12345678"
 
