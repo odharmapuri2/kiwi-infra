@@ -1,0 +1,7 @@
+#ignore terraform.tfvars file
+*.tfvars
+#*.hcl
+.terraform.lock.hcl
+
+# ignore ALL files in ANY directory named temp
+.terraform/
