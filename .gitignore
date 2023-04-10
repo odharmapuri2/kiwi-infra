@@ -1,5 +1,6 @@
 #ignore terraform.tfvars file
 *.tfvars
+#*.pem
 #*.hcl
 .terraform.lock.hcl
 

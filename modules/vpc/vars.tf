@@ -1,9 +1,6 @@
-variable "zone" {
-  default = "us-east-1a"
-}
-variable "project" {
-  default = "kiwi"
-}
+variable "zone1a" {}
+variable "zone1b" {}
+variable "project" {}
 /*
 variable "pri-sn-id" {}
 variable "pub-sn-id" {}

@@ -7,12 +7,26 @@ provider "aws" {
 #Modules
 module "vpc" {
   source    = "./modules/vpc"
+  zone1a = "${var.zone1a}"
+  zone1b = "${var.zone1b}"
+  project = "${var.project}"
 }
 module "ec2" {
   source = "./modules/ec2"
-  pri-sn = "${module.vpc.pri-sn}"
-  pub-sn = "${module.vpc.pub-sn}"
+  sn1 = "${module.vpc.sn1}"
+  sn2 = "${module.vpc.sn2}"
   app-sg = "${module.vpc.app-sg}"
-  elb-sg = "${module.vpc.elb-sg}"
+  alb-sg = "${module.vpc.alb-sg}"
   backend-sg = "${module.vpc.backend-sg}"
+  project = "${var.project}"
+}
+module "alb" {
+  source    = "./modules/alb"
+  project = "${var.project}"
+  vpc-id = "${module.vpc.vpc-id}"
+  app01 = "${module.ec2.app01}"
+  app02 = "${module.ec2.app02}"
+  alb-sg = "${module.vpc.alb-sg}"
+  sn1 = "${module.vpc.sn1}"
+  sn2 = "${module.vpc.sn2}"
 }

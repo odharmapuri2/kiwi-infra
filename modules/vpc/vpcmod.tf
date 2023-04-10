@@ -17,36 +17,36 @@ resource "aws_internet_gateway" "kiwi-igw" {
   }
 }
 #Elastic IP 
-resource "aws_eip" "kiwi-eip" {
+/*resource "aws_eip" "kiwi-eip" {
   vpc = true
   tags = {
     Name = "${var.project}-eip"
   }
-}
+}*/
 #Subnet 1
-resource "aws_subnet" "pri-sn" {
-  availability_zone = var.zone
+resource "aws_subnet" "sn1" {
+  availability_zone = var.zone1a
   vpc_id            = aws_vpc.kiwi-vpc.id
   cidr_block        = "10.0.1.0/24"
-  map_public_ip_on_launch = "true"
+  #map_public_ip_on_launch = "true"
   tags = {
-    Name = "${var.project}-pri-sn"
+    Name = "${var.project}-sn1"
   }
 }
 #Subnet 2
-resource "aws_subnet" "pub-sn" {
-  availability_zone       = var.zone
+resource "aws_subnet" "sn2" {
+  availability_zone       = var.zone1b
   vpc_id                  = aws_vpc.kiwi-vpc.id
   cidr_block              = "10.0.2.0/24"
-  map_public_ip_on_launch = "true"
+  #map_public_ip_on_launch = "true"
   tags = {
-    Name = "${var.project}-pub-sn"
+    Name = "${var.project}-sn2"
   }
 }
-#security group for elb
-resource "aws_security_group" "elb-sg" {
-  name        = "elb-sg"
-  description = "Allow elb inbound traffic"
+#security group for alb
+resource "aws_security_group" "alb-sg" {
+  name        = "alb-sg"
+  description = "Allow alb inbound traffic"
   vpc_id      = aws_vpc.kiwi-vpc.id
 
   ingress {
@@ -57,16 +57,6 @@ resource "aws_security_group" "elb-sg" {
     cidr_blocks = ["0.0.0.0/0"]
     #ipv6_cidr_blocks = [aws_vpc.main.ipv6_cidr_block]
   }
-
-  ingress {
-    description = "TLS from VPC"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-    #ipv6_cidr_blocks = [aws_vpc.main.ipv6_cidr_block]
-  }
-
   egress {
     from_port   = 0
     to_port     = 0
@@ -74,23 +64,22 @@ resource "aws_security_group" "elb-sg" {
     cidr_blocks = ["0.0.0.0/0"]
     #ipv6_cidr_blocks = ["::/0"]
   }
-
   tags = {
-    Name = "${var.project}-elb-sg"
+    Name = "${var.project}-alb-sg"
   }
 }
 #security group for app
 resource "aws_security_group" "app-sg" {
   #name        = "app-sg"
-  description = "Allow app traffic from elb"
+  description = "Allow app traffic from alb"
   vpc_id      = aws_vpc.kiwi-vpc.id
 
   ingress {
-    description     = "TLS from elb"
+    description     = "TLS from alb"
     from_port       = 8080
     to_port         = 8080
     protocol        = "tcp"
-    cidr_blocks     = ["0.0.0.0/0"]
+    security_groups = ["${aws_security_group.alb-sg.id}"]
     #cidr_blocks      = ["0.0.0.0/0"]
     #ipv6_cidr_blocks = [aws_vpc.main.ipv6_cidr_block]
   }
@@ -103,7 +92,6 @@ resource "aws_security_group" "app-sg" {
     #cidr_blocks      = ["0.0.0.0/0"]
     #ipv6_cidr_blocks = [aws_vpc.main.ipv6_cidr_block]
   }
-
   egress {
     from_port   = 0
     to_port     = 0
@@ -111,12 +99,11 @@ resource "aws_security_group" "app-sg" {
     cidr_blocks = ["0.0.0.0/0"]
     #ipv6_cidr_blocks = ["::/0"]
   }
-
   tags = {
     Name = "${var.project}-app-sg"
   }
 }
-#security group for app
+#security group for backend
 resource "aws_security_group" "backend-sg" {
   name        = "backend-sg"
   description = "Allow backend traffic from app"
@@ -159,7 +146,6 @@ resource "aws_security_group" "backend-sg" {
     #cidr_blocks      = ["0.0.0.0/0"]
     #ipv6_cidr_blocks = [aws_vpc.main.ipv6_cidr_block]
   }
-
   egress {
     from_port   = 0
     to_port     = 0
@@ -167,30 +153,39 @@ resource "aws_security_group" "backend-sg" {
     cidr_blocks = ["0.0.0.0/0"]
     #ipv6_cidr_blocks = ["::/0"]
   }
-
   tags = {
     Name = "${var.project}-backend-sg"
   }
 }
-resource "aws_route_table" "public_route" {
+resource "aws_route_table" "route1" {
   vpc_id = aws_vpc.kiwi-vpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.kiwi-igw.id
   }
-
   tags = {
-    Name = "${var.project}-public_route"
+    Name = "${var.project}-route1"
+  }
+}
+resource "aws_route_table" "route2" {
+  vpc_id = aws_vpc.kiwi-vpc.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.kiwi-igw.id
+  }
+  tags = {
+    Name = "${var.project}-route2"
   }
 }
 #Route table Association
-resource "aws_route_table_association" "pub" {
-  subnet_id      = aws_subnet.pub-sn.id
-  route_table_id = aws_route_table.public_route.id
+resource "aws_route_table_association" "rp1" {
+  subnet_id      = aws_subnet.sn1.id
+  route_table_id = aws_route_table.route1.id
 }
 #Route table Association
-resource "aws_route_table_association" "pri" {
-  subnet_id      = aws_subnet.pri-sn.id
-  route_table_id = aws_route_table.public_route.id
+resource "aws_route_table_association" "rp2" {
+  subnet_id      = aws_subnet.sn2.id
+  route_table_id = aws_route_table.route2.id
 }

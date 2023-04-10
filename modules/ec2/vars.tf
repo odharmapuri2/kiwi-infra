@@ -5,7 +5,7 @@ variable AMIS {
     us-east-1 = "ami-0947d2ba12ee1ff75"
   }
 }
-variable app-server {
+variable app {
   default = "ami-007855ac798b5175e"
 }
 variable centos {
@@ -14,11 +14,9 @@ variable centos {
 variable key-pair {
   default = "kiwigate"
 }
-variable project {
-  default = "kiwi"
-}
-variable "pri-sn" {}
-variable "pub-sn" {}
+variable "project" {}
+variable "sn1" {}
+variable "sn2" {}
 variable "app-sg" {}
-variable "elb-sg" {}
+variable "alb-sg" {}
 variable "backend-sg" {}

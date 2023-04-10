@@ -9,3 +9,12 @@ variable "access_key" {
 variable "secret_key" {
   type = string
 }
+variable "project" {
+  default = "kiwi"
+}
+variable "zone1a" {
+  default = "us-east-1a"
+}
+variable "zone1b" {
+  default = "us-east-1b"
+}
