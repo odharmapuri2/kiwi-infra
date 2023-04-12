@@ -18,3 +18,6 @@ variable "zone1a" {
 variable "zone1b" {
   default = "us-east-1b"
 }
+variable "centos" {
+  default = "ami-002070d43b0a4f171"
+}

@@ -8,9 +8,8 @@ variable AMIS {
 variable app {
   default = "ami-007855ac798b5175e"
 }
-variable centos {
-  default = "ami-002070d43b0a4f171"
-}
+variable centos {}
+
 variable key-pair {
   default = "kiwigate"
 }

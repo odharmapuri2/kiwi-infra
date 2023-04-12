@@ -1,12 +1,12 @@
 resource "aws_instance" "app" {
   count                  = 2
-  ami                    = "${var.app}"
+  ami                    = "${var.centos}"
   instance_type          = "t2.micro"
   subnet_id              = var.sn1
   key_name               = "${var.key-pair}"
   vpc_security_group_ids = [var.app-sg]
   associate_public_ip_address = true
-  user_data              = "tomcat_ubuntu.sh"
+  user_data              = "tomcat.sh"
   tags = {
     Name = "${var.project}-app${count.index}"
   }
