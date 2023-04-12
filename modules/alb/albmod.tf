@@ -16,14 +16,14 @@ resource "aws_lb_target_group" "kiwi-dev-tg" {
 }
 resource "aws_lb_target_group_attachment" "kiwi-dev-tg-a1" {
   target_group_arn = "${aws_lb_target_group.kiwi-dev-tg.arn}"
-  target_id        = "${var.app01}"
+  target_id        = "${var.app}"
   port             = 80
 }
-resource "aws_lb_target_group_attachment" "kiwi-dev-tg-a2" {
+/*resource "aws_lb_target_group_attachment" "kiwi-dev-tg-a2" {
   target_group_arn = "${aws_lb_target_group.kiwi-dev-tg.arn}"
   target_id        = "${var.app02}"
   port             = 80
-}
+}*/
  /* targets = {
   my_app1_vm1 = {
     target_id = module.ec2_private.ec2_instance_ids[0]

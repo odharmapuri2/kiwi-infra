@@ -1,9 +1,9 @@
-output "app01" {
-  value = aws_instance.app.0.id
+output "app" {
+  value = aws_instance.app[*].id
 }
-output "app02" {
+/*output "app02" {
   value = aws_instance.app.1.id
-}
+}*/
 output "ec2ip" {
   value = aws_instance.app[*].private_ip
 }

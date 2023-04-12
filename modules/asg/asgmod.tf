@@ -19,7 +19,7 @@ resource "aws_launch_configuration" "launch-conf" {
 resource "aws_autoscaling_group" "asg" {
   launch_configuration = "${aws_launch_configuration.launch-conf.name}"
   vpc_zone_identifier  = ["${var.sn1}","${var.sn2 }"]
-  #target_group_arns     = "${var.tg}"
+  target_group_arns     = "${var.tg}"
   health_check_type    = "ELB"
 
   min_size = 2

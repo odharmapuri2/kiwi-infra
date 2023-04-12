@@ -26,9 +26,9 @@ module "alb" {
   project = "${var.project}"
   vpc-id = "${module.vpc.vpc-id}"
   count = "${length(module.ec2.app)}"
-  #app = "${element(module.ec2.app, count.index)}" 
-  app01 = "${module.ec2.app01}"
-  app02 = "${module.ec2.app02}"
+  app = "${element(module.ec2.app, count.index)}" 
+  #app01 = "${module.ec2.app01}"
+  #app02 = "${module.ec2.app02}"
   alb-sg = "${module.vpc.alb-sg}"
   sn1 = "${module.vpc.sn1}"
   sn2 = "${module.vpc.sn2}"
@@ -43,7 +43,7 @@ module "asg" {
   app-sg = "${module.vpc.app-sg}"
   sn1 = "${module.vpc.sn1}"
   sn2 = "${module.vpc.sn2}"
-  #tg = "${module.alb.aws_lb_target_group_arn}"
+  tg = "${module.alb.tg}"
 }
 module "route53" {
   source = "./modules/route53"

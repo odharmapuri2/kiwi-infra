@@ -58,10 +58,10 @@ resource "aws_security_group" "alb-sg" {
     #ipv6_cidr_blocks = [aws_vpc.main.ipv6_cidr_block]
   }
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    security_groups = ["${aws_security_group.app-sg.id}"]
     #ipv6_cidr_blocks = ["::/0"]
   }
   tags = {
@@ -74,15 +74,15 @@ resource "aws_security_group" "app-sg" {
   description = "Allow app traffic from alb"
   vpc_id      = aws_vpc.kiwi-vpc.id
 
-  ingress {
+  /*ingress {
     description     = "TLS from alb"
-    from_port       = 8080
-    to_port         = 8080
+    from_port       = 80
+    to_port         = 80
     protocol        = "tcp"
     security_groups = ["${aws_security_group.alb-sg.id}"]
     #cidr_blocks      = ["0.0.0.0/0"]
     #ipv6_cidr_blocks = [aws_vpc.main.ipv6_cidr_block]
-  }
+  }*/
   ingress {
     description     = "SSH open"
     from_port       = 22
