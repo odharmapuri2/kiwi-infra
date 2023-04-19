@@ -10,9 +10,7 @@ variable app {
 }
 variable centos {}
 
-variable key-pair {
-  default = "kiwigate"
-}
+variable key-pair {}
 variable "project" {}
 variable "sn1" {}
 variable "sn2" {}
