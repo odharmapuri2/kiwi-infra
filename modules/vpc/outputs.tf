@@ -14,5 +14,5 @@ output "backend-sg" {
   value = aws_security_group.backend-sg.id
 }
 output "vpc-id" {
-  value = aws_vpc.kiwi-vpc.id  
+  value = aws_vpc.kiwi-vpc.id
 }

@@ -1,7 +1,7 @@
 resource "aws_lb_target_group" "kiwi-dev-tg" {
   health_check {
     interval            = 10
-    path                = "/"
+    path                = "/login"
     protocol            = "HTTP"
     timeout             = 5
     healthy_threshold   = 3
@@ -12,7 +12,7 @@ resource "aws_lb_target_group" "kiwi-dev-tg" {
   port        = 8080
   protocol    = "HTTP"
   target_type = "instance"
-  vpc_id      = "${var.vpc-id}"
+  vpc_id      = var.vpc-id
 }
 resource "aws_lb_target_group_attachment" "kiwi-dev-tg-a1" {
   target_group_arn = aws_lb_target_group.kiwi-dev-tg.arn

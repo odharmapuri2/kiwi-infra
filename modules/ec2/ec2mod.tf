@@ -1,12 +1,12 @@
 resource "aws_instance" "app" {
-  count                  = 2
-  ami                    = "${var.centos}"
-  instance_type          = "t2.micro"
-  subnet_id              = var.sn1
-  key_name               = "${var.key-pair}"
-  vpc_security_group_ids = [var.app-sg]
+  count                       = 2
+  ami                         = var.centos
+  instance_type               = "t2.micro"
+  subnet_id                   = var.sn1
+  key_name                    = var.key-pair
+  vpc_security_group_ids      = [var.app-sg]
   associate_public_ip_address = true
-  user_data              = "${file("modules/ec2/tomcat.sh")}"
+  user_data                   = file("modules/ec2/tomcat.sh")
   tags = {
     Name = "${var.project}-app${count.index}"
   }
@@ -22,34 +22,37 @@ resource "aws_instance" "app" {
 	EOF
 */
 resource "aws_instance" "sql" {
-  ami                    = "${var.centos}"
+  ami                    = var.centos
   instance_type          = "t2.micro"
   subnet_id              = var.sn1
-  key_name               = "${var.key-pair}"
+  key_name               = var.key-pair
   vpc_security_group_ids = [var.backend-sg]
-  user_data              = "${file("modules/ec2/mysql.sh")}"
+  associate_public_ip_address = true
+  user_data              = file("modules/ec2/mysql.sh")
   tags = {
     Name = "${var.project}-sql"
   }
 }
 resource "aws_instance" "cache" {
-  ami                    = "${var.centos}"
+  ami                    = var.centos
   instance_type          = "t2.micro"
   subnet_id              = var.sn1
-  key_name               = "${var.key-pair}"
+  key_name               = var.key-pair
   vpc_security_group_ids = [var.backend-sg]
-  user_data              = "${file("modules/ec2/memcache.sh")}"
+  associate_public_ip_address = true
+  user_data              = file("modules/ec2/memcache.sh")
   tags = {
     Name = "${var.project}-cache"
   }
 }
 resource "aws_instance" "memq" {
-  ami                    = "${var.centos}"
+  ami                    = var.centos
   instance_type          = "t2.micro"
   subnet_id              = var.sn1
-  key_name               = "${var.key-pair}"
+  key_name               = var.key-pair
   vpc_security_group_ids = [var.backend-sg]
-  user_data              = "${file("modules/ec2/rabbitmq.sh")}"
+  associate_public_ip_address = true
+  user_data              = file("modules/ec2/rabbitmq.sh")
   tags = {
     Name = "${var.project}-memq"
   }

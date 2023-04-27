@@ -32,7 +32,7 @@ module "alb" {
   sn1    = module.vpc.sn1
   sn2    = module.vpc.sn2
 }
-module "s3" {
+/*module "s3" {
   source  = "./modules/s3"
   project = var.project
 }
@@ -45,7 +45,7 @@ module "asg" {
   tg       = module.alb[*].tg
   aws-alb  = module.alb[*].aws-alb
   key-pair = var.key-pair
-}
+}*/
 module "route53" {
   source = "./modules/route53"
   vpc-id = module.vpc.vpc-id

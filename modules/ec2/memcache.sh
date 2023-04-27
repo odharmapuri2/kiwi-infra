@@ -1,5 +1,7 @@
 #!/bin/bash
+sudo su
 sudo yum install epel-release -y
+sodo yum update -y
 sudo yum install memcached -y
 sudo systemctl start memcached
 sudo systemctl enable memcached

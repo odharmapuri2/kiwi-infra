@@ -32,8 +32,8 @@ EOT
 systemctl daemon-reload
 systemctl start tomcat
 systemctl enable tomcat
-git clone -b vp-rem https://github.com/odharmapuri2/projectslab.git
-cd projectslab
+git clone -b main https://github.com/odharmapuri2/kiwi-infra.git
+cd kiwi-infra
 mvn install
 systemctl stop tomcat
 sleep 120

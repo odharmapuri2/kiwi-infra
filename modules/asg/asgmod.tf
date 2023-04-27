@@ -1,9 +1,9 @@
 resource "aws_launch_template" "lt" {
-  name            = "${var.project}-lt"
-  image_id        = "ami-002070d43b0a4f171"
-  instance_type   = "t2.micro"
-  key_name        = var.key-pair
-  user_data       = "${file("modules/ec2/tomcat.sh")}"
+  name          = "${var.project}-lt"
+  image_id      = "ami-002070d43b0a4f171"
+  instance_type = "t2.micro"
+  key_name      = var.key-pair
+  user_data     = file("modules/ec2/tomcat.sh")
   /*user_data = <<-EOF
               #!/bin/bash
               yum -y install httpd
@@ -16,7 +16,7 @@ resource "aws_launch_template" "lt" {
   }
   network_interfaces {
     associate_public_ip_address = true
-    security_groups = [var.app-sg]
+    security_groups             = [var.app-sg]
   }
   tag_specifications {
     resource_type = "instance"
@@ -29,12 +29,12 @@ resource "aws_launch_template" "lt" {
 resource "aws_autoscaling_group" "asg" {
   #name                 = "${var.project}-asg"
   #launch_configuration = aws_launch_configuration.launch-conf.name
-  vpc_zone_identifier  = [var.sn1, var.sn2]
-  target_group_arns    = var.tg
-  health_check_type    = "ELB"
+  vpc_zone_identifier       = [var.sn1, var.sn2]
+  target_group_arns         = var.tg
+  health_check_type         = "ELB"
   health_check_grace_period = 300
-  min_size = 2
-  max_size = 4
+  min_size                  = 2
+  max_size                  = 4
   launch_template {
     id      = aws_launch_template.lt.id
     version = aws_launch_template.lt.latest_version
@@ -57,20 +57,20 @@ resource "aws_autoscaling_policy" "up" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "up-alarm" {
-  alarm_name = "${var.project}-up-alarm"
-  alarm_description = "scale-up-alarm"
+  alarm_name          = "${var.project}-up-alarm"
+  alarm_description   = "scale-up-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods = "2"
-  metric_name = "CPUUtilization"
-  namespace = "AWS/EC2"
-  period = "120"
-  statistic = "Average"
-  threshold = "50"
+  evaluation_periods  = "2"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = "120"
+  statistic           = "Average"
+  threshold           = "50"
   dimensions = {
     "AutoScalingGroupName" = aws_autoscaling_group.asg.name
   }
   actions_enabled = true
-  alarm_actions = [aws_autoscaling_policy.up.arn]
+  alarm_actions   = [aws_autoscaling_policy.up.arn]
 }
 
 resource "aws_autoscaling_policy" "down" {
@@ -83,18 +83,18 @@ resource "aws_autoscaling_policy" "down" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "down-alarm" {
-  alarm_name = "${var.project}-down-alarm"
-  alarm_description = "scale-down-alarm"
+  alarm_name          = "${var.project}-down-alarm"
+  alarm_description   = "scale-down-alarm"
   comparison_operator = "LessThanOrEqualToThreshold"
-  evaluation_periods = "2"
-  metric_name = "CPUUtilization"
-  namespace = "AWS/EC2"
-  period = "120"
-  statistic = "Average"
-  threshold = "20"
+  evaluation_periods  = "2"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = "120"
+  statistic           = "Average"
+  threshold           = "20"
   dimensions = {
     "AutoScalingGroupName" = aws_autoscaling_group.asg.name
   }
   actions_enabled = true
-  alarm_actions = [aws_autoscaling_policy.down.arn]
+  alarm_actions   = [aws_autoscaling_policy.down.arn]
 }
